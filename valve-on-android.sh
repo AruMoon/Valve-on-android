@@ -62,10 +62,10 @@ while true; do
     read -p "Choice (1-4): " lang_option
 
     case "$lang_option" in
-        1) load_language_script "english.sh" "https://raw.githubusercontent.com/source-br/Valve-on-android/main/english.sh"; break ;;
-        2) load_language_script "brazilian.sh" "https://raw.githubusercontent.com/source-br/Valve-on-android/main/brazilian.sh"; break ;;
-        3) load_language_script "russian.sh" "https://raw.githubusercontent.com/source-br/Valve-on-android/main/russian.sh"; break ;;
-        4) load_language_script "spanish.sh" "https://raw.githubusercontent.com/source-br/Valve-on-android/main/spanish.sh"; break ;;
+        1) load_language_script "english.sh" "https://raw.githubusercontent.com/AruMoon/Valve-on-android/main/english.sh"; break ;;
+        2) load_language_script "brazilian.sh" "https://raw.githubusercontent.com/AruMoon/Valve-on-android/main/brazilian.sh"; break ;;
+        3) load_language_script "russian.sh" "https://raw.githubusercontent.com/AruMoon/Valve-on-android/main/russian.sh"; break ;;
+        4) load_language_script "spanish.sh" "https://raw.githubusercontent.com/AruMoon/Valve-on-android/main/spanish.sh"; break ;;
         b|B) echo "Returning..."; exit 0 ;;
         *) echo -e "\nInvalid option. Try again..."; sleep 2 ;;
     esac
