@@ -2,11 +2,11 @@ Os jogos da valve como Half-Life é o CS 1.6 são possíveis de serem jogados no
 
 Primeiramente tenha os jogos que você deseja jogar comprados na sua conta da Steam.
 
-Baixe o [Termux](https://termux.dev/en/) e o [TermuxDepotDownloader](https://github.com/TheKingFireS/TermuxDepotDownloader).
+Baixe o [Termux](https://termux.dev/en/) e o [TermuxDepotDownloader](https://github.com/AruMoon/TermuxDepotDownloader).
 
 Agora baixe e instale o nosso script:
 ```
-curl -LO "https://raw.githubusercontent.com/source-br/Valve-on-android/main/installgames.sh"
+curl -LO "https://raw.githubusercontent.com/AruMoon/Valve-on-android/main/installgames.sh"
 chmod +x installgames.sh
 ./installgames.sh
 ```

@@ -396,7 +396,7 @@ if ! command -v depotdownloader >/dev/null 2>&1; then
     sleep 5
     echo -e "${BOLD}${GREEN}$LANG_INSTALLING${RESET} depotdownloader"
     sleep 3
-    curl -LO "https://raw.githubusercontent.com/TheKingFireS/TermuxDepotDownloader/alpine/installproot.sh"
+    curl -LO "https://raw.githubusercontent.com/AruMoon/TermuxDepotDownloader/alpine/installproot.sh"
     chmod +x installproot.sh
     ./installproot.sh
     echo -e "${BOLD}${GREEN}[*] depotdownloader $LANG_SUCCESS${RESET}"

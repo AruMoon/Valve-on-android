@@ -21,7 +21,7 @@
 
 Этот проект направлен на упрощение законной загрузки игр от Valve на Android.
 
-`valve-on-android` — это инструмент для Termux, использующий [TermuxDepotDownloader](https://github.com/TheKingFireS/TermuxDepotDownloader) от [TheKingFireS](https://github.com/TheKingFireS)
+`valve-on-android` — это инструмент для Termux, использующий [TermuxDepotDownloader](https://github.com/AruMoon/TermuxDepotDownloader) от [TheKingFireS](https://github.com/TheKingFireS)
 
 [Termux](https://github.com/termux/termux-app)
 
@@ -64,7 +64,7 @@
 -----
 Скопируйте и вставьте следующую команду в Termux для запуска скрипта:
 ```
-curl -LO "https://raw.githubusercontent.com/source-br/Valve-on-android/main/valve-on-android.sh" && chmod +x valve-on-android.sh && ./valve-on-android.sh
+curl -LO "https://raw.githubusercontent.com/AruMoon/Valve-on-android/main/valve-on-android.sh" && chmod +x valve-on-android.sh && ./valve-on-android.sh
 ```
 
 <div align="center">

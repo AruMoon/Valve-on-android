@@ -23,7 +23,7 @@ Este projeto tem como objetivo facilitar o download de jogos da Valve no Android
 
 Vejam a [Documentação](../PT-BR/Documentação.md)
 
-`valve-on-android` é uma ferramenta para Termux que utiliza o [TermuxDepotDownloader](https://github.com/TheKingFireS/TermuxDepotDownloader) feito por [TheKingFireS](https://github.com/TheKingFireS)
+`valve-on-android` é uma ferramenta para Termux que utiliza o [TermuxDepotDownloader](https://github.com/AruMoon/TermuxDepotDownloader) feito por [TheKingFireS](https://github.com/TheKingFireS)
 
 ## Funções:
 - Suporte a múltiplos idiomas na interface do script.
@@ -64,7 +64,7 @@ Vejam a [Documentação](../PT-BR/Documentação.md)
 -----
 Copie e cole o comando abaixo no Termux para usar o script:
 ```
-curl -LO "https://raw.githubusercontent.com/source-br/Valve-on-android/main/valve-on-android.sh" && chmod +x valve-on-android.sh && ./valve-on-android.sh
+curl -LO "https://raw.githubusercontent.com/AruMoon/Valve-on-android/main/valve-on-android.sh" && chmod +x valve-on-android.sh && ./valve-on-android.sh
 ```
 
 <div align="center">
