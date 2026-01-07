@@ -134,7 +134,8 @@ declare -A lang_display_names=(
 # Display of community languages with strings (safe fallback)
 declare -A COMMUNITY_LANG_DISPLAY=(
     ["pt-BR"]="$LANG_PORTUGUESE_BRAZIL | $LANG_BY_SRBR_MPD"
-    ["es-419"]="$LANG_SPANISH_L}"
+    ["es-419"]="$LANG_SPANISH_L"
+    ["RU"]="$LANG_RUSSIAN"
 )
 
 # URLs
@@ -147,14 +148,14 @@ declare -A COMMUNITY_OUTDIRS
 # --------- Examples (edit/add according to your packages) ---------
 # Fallback by appid (when you don't want to specify depot, don't put the number after the : of the number)
 # Half-Life 2 (HL2 base: app 220 depot 221)
-# COMMUNITY_URLS["220:221,pt-BR"]=""
-# COMMUNITY_OUTFILES["220:221,pt-BR"]="HL2_Brazilian.7z"
-# COMMUNITY_OUTDIRS["220:221,pt-BR"]="~/~/storage/srceng"
+COMMUNITY_URLS["220:221,pt-BR"]="https://github.com/source-br/Community-Translations-for-Source/releases/download/continuous/Half-Life-2-Brazilian.zip"
+COMMUNITY_OUTFILES["220:221,pt-BR"]="HL2_Brazilian.zip"
+COMMUNITY_OUTDIRS["220:221,pt-BR"]="/storage/emulated/0/srceng/hl2/"
 
 # HL2 Episode One (app 220 depot 389/380)
-# COMMUNITY_URLS["220:389,pt-BR"]=""
-# COMMUNITY_OUTFILES["220:389,pt-BR"]="HL2_EP1_Brazilian.7z"
-# COMMUNITY_OUTDIRS["220:389,pt-BR"]="~/~/storage/srceng"
+COMMUNITY_URLS["220:389,pt-BR"]="https://github.com/source-br/Community-Translations-for-Source/releases/download/continuous/Half-Life-2-Episode-One-Brazilian.zip"
+COMMUNITY_OUTFILES["220:389,pt-BR"]="HL2_EP1_Brazilian.zip"
+COMMUNITY_OUTDIRS["220:389,pt-BR"]="/storage/emulated/0/srceng/episodic/"
 
 # HL2 Episode Two (app 220 depot 420)
 # COMMUNITY_URLS["220:420,pt-BR"]=""
@@ -162,31 +163,52 @@ declare -A COMMUNITY_OUTDIRS
 # COMMUNITY_OUTDIRS["220:420,pt-BR"]="~/storage/srceng"
 
 # Half-Life 1 (app 70, depot 1 new)
-COMMUNITY_URLS["70:1,pt-BR"]="https://github.com/source-br/Community-Translations-for-Half-Life/releases/download/continuous/Xash-Brazilian.7z"
-COMMUNITY_OUTFILES["70:1,pt-BR"]="valve_brazilian.7z"
+COMMUNITY_URLS["70:1,pt-BR"]="https://github.com/source-br/Community-Translations-for-GoldSrc/releases/download/continuous/Half-Life-Xash-Brazilian.zip"
+COMMUNITY_URLS["70:1,RU"]="https://github.com/source-br/Community-Translations-for-GoldSrc/releases/download/continuous/Half-Life-Xash-Russian.zip"
+COMMUNITY_OUTFILES["70:1,pt-BR"]="valve_brazilian.zip"
+COMMUNITY_OUTFILES["70:1,RU"]="valve_russian.zip"
 COMMUNITY_OUTDIRS["70:1,pt-BR"]="/storage/emulated/0/xash"
+COMMUNITY_OUTDIRS["70:1,RU"]="/storage/emulated/0/xash"
+
+# Half-Life: Opposing Force (app 50, depot 51 new)
+COMMUNITY_URLS["50:51,pt-BR"]="https://github.com/source-br/Community-Translations-for-GoldSrc/releases/download/continuous/Half-Life-Opposing-Force-Xash-Brazilian.zip"
+COMMUNITY_OUTFILES["50:51,pt-BR"]="gearbox_brazilian.zip"
+COMMUNITY_OUTDIRS["50:51,pt-BR"]="/storage/emulated/0/xash"
+
+# Half-Life: Blue Shift (app 130, depot 130 new)
+COMMUNITY_URLS["130:130,RU"]="https://github.com/source-br/Community-Translations-for-GoldSrc/releases/download/continuous/Half-Life-Blue-Shift-Xash-Russian.zip"
+COMMUNITY_URLS["130:130,pt-BR"]="https://github.com/source-br/Community-Translations-for-GoldSrc/releases/download/continuous/Half-Life-Blue-Shift-Xash-Brazilian.zip"
+COMMUNITY_OUTFILES["130:130,pt-BR"]="bshift_brazilian.zip"
+COMMUNITY_OUTFILES["130:130,RU"]="bshift_russian.zip"
+COMMUNITY_OUTDIRS["130:130,pt-BR"]="/storage/emulated/0/xash"
+COMMUNITY_OUTDIRS["130:130,RU"]="/storage/emulated/0/xash"
+
+# Counter-Strike (app 10, depot 11 new)
+COMMUNITY_URLS["10:11,RU"]="https://github.com/source-br/Community-Translations-for-GoldSrc/releases/download/continuous/Counter-Strike-Xash-Russian.zip"
+COMMUNITY_OUTFILES["10:11,RU"]="cs_russian.zip"
+COMMUNITY_OUTDIRS["10:11,RU"]="/storage/emulated/0/xash"
 
 # ==========================================
-# COMMUNITY helpers: detect extractor, install if missing, extract 7z, download+extract
+# COMMUNITY helpers: detect extractor, install if missing, extract zip, download+extract
 # ==========================================
-try_install_7zip() {
-    # Try installing only the "7zip" package via pkg.
+try_install_unzip() {
+    # Try installing only the "unzip" package via pkg.
     echo -e "${YELLOW}$LANG_TRY_INSTALL_7ZIP${RESET}"
     if command -v pkg >/dev/null 2>&1; then
-        if pkg install -y 7zip >/dev/null 2>&1; then
+        if pkg install -y unzip >/dev/null 2>&1; then
             sleep 1
             return 0
         else
-            echo -e "${YELLOW}pkg install 7zip failed or not available.${RESET}"
+            echo -e "${YELLOW}pkg install unzip failed or not available.${RESET}"
             return 1
         fi
     fi
     return 1
 }
 
-find7z() {
-    # prefer explicit 7z binaries, then unar/bsdtar
-    for cmd in 7zz 7z 7za 7zr; do
+find_zip_extractor() {
+    # prefer explicit unzip, then unar/bsdtar, then 7z
+    for cmd in unzip; do
         if command -v "$cmd" >/dev/null 2>&1; then
             echo "$cmd"
             return 0
@@ -200,15 +222,19 @@ find7z() {
         echo "bsdtar"
         return 0
     fi
+    for cmd in 7zz 7z 7za 7zr; do
+        if command -v "$cmd" >/dev/null 2>&1; then
+            echo "$cmd"
+            return 0
+        fi
+    done
 
-    # try automatic install (7zip via pkg) then re-check
-    try_install_7zip
-    for cmd in 7zz 7z 7za 7zr; do
-        if command -v "$cmd" >/dev/null 2>&1; then
-            echo "$cmd"
-            return 0
-        fi
-    done
+    # try automatic install (unzip via pkg) then re-check
+    try_install_unzip
+    if command -v unzip >/dev/null 2>&1; then
+        echo "unzip"
+        return 0
+    fi
     if command -v unar >/dev/null 2>&1; then
         echo "unar"
         return 0
@@ -217,19 +243,25 @@ find7z() {
         echo "bsdtar"
         return 0
     fi
+    for cmd in 7zz 7z 7za 7zr; do
+        if command -v "$cmd" >/dev/null 2>&1; then
+            echo "$cmd"
+            return 0
+        fi
+    done
 
     return 1
 }
 
-extract_7z() {
+extract_zip() {
     local archive="$1"
     local dest="$2"
     local extractor
     local log
     log="$(mktemp --tmpdir extract_log.XXXX 2>/dev/null || mktemp 2>/dev/null || echo "/tmp/extract_log.$$")"
 
-    extractor=$(find7z) || {
-        echo -e "${YELLOW}7z extractor not found and automatic installation failed. Cannot extract archive.${RESET}"
+    extractor=$(find_zip_extractor) || {
+        echo -e "${YELLOW}zip extractor not found and automatic installation failed. Cannot extract archive.${RESET}"
         rm -f "$log" 2>/dev/null || true
         return 1
     }
@@ -239,11 +271,11 @@ extract_7z() {
     mkdir -p "$tmpdir"
 
     local success=1
-    # Try a sequence of extract commands depending on detected tools (no p7zip)
+    # Try a sequence of extract commands depending on detected tools
     case "$extractor" in
-        7zz|7z|7za|7zr)
-            if command -v "$extractor" >/dev/null 2>&1; then
-                "$extractor" x "$archive" -o"$tmpdir" -y >>"$log" 2>&1 && success=0 || success=1
+        unzip)
+            if command -v unzip >/dev/null 2>&1; then
+                unzip -o "$archive" -d "$tmpdir" >>"$log" 2>&1 && success=0 || success=1
             fi
             ;;
         unar)
@@ -256,20 +288,26 @@ extract_7z() {
                 bsdtar -xf "$archive" -C "$tmpdir" >>"$log" 2>&1 && success=0 || success=1
             fi
             ;;
+        7zz|7z|7za|7zr)
+            if command -v "$extractor" >/dev/null 2>&1; then
+                "$extractor" x "$archive" -o"$tmpdir" -y >>"$log" 2>&1 && success=0 || success=1
+            fi
+            ;;
         *)
             success=1
             ;;
     esac
 
-    # If first attempt failed, try other known extractors if available (no p7zip)
+    # If first attempt failed, try other known extractors if available
     if [[ $success -ne 0 ]]; then
-        for alt in 7zz 7z 7za 7zr unar bsdtar; do
+        for alt in unzip unar bsdtar 7zz 7z 7za 7zr; do
             [[ "$alt" == "$extractor" ]] && continue
             if command -v "$alt" >/dev/null 2>&1; then
                 case "$alt" in
-                    7zz|7z|7za|7zr) "$alt" x "$archive" -o"$tmpdir" -y >>"$log" 2>&1 && { success=0; break; } || success=1 ;;
+                    unzip) unzip -o "$archive" -d "$tmpdir" >>"$log" 2>&1 && { success=0; break; } || success=1 ;;
                     unar) unar -o "$tmpdir" "$archive" >>"$log" 2>&1 && { success=0; break; } || success=1 ;;
                     bsdtar) bsdtar -xf "$archive" -C "$tmpdir" >>"$log" 2>&1 && { success=0; break; } || success=1 ;;
+                    7zz|7z|7za|7zr) "$alt" x "$archive" -o"$tmpdir" -y >>"$log" 2>&1 && { success=0; break; } || success=1 ;;
                 esac
             fi
         done
@@ -332,10 +370,10 @@ download_and_extract_community_pack() {
 
     echo -e "${GREEN}$LANG_SUCCESS_DOWNLOAD${RESET}"
 
-    # If it's a 7z archive, try to extract and cleanup
+    # If it's a zip archive, try to extract and cleanup
     case "${outfile,,}" in
-        *.7z|*.7z.*)
-            if ! extract_7z "$outpath" "$outdir"; then
+        *.zip|*.zip.*)
+            if ! extract_zip "$outpath" "$outdir"; then
                 echo -e "${YELLOW}Warning: extraction failed or extractor missing. Archive left in $outdir${RESET}"
                 return 1
             fi
@@ -643,11 +681,11 @@ while true; do
                     echo -e "${BOLD}$LANG_TRANSLATION_TYPE${RESET}"
                     echo
                     echo "1) $LANG_TRANSLATION_OFFICIAL"
-                  # echo "2) $LANG_TRANSLATION_COMMUNITY"
+                    echo "2) $LANG_TRANSLATION_COMMUNITY"
 					echo
                     echo -e "${RED}b) $LANG_OPTION_BACK${RESET}"
                     echo "============================"
-                    read -p "$LANG_PROMPT_CHOOSE (1-1): " translation_type
+                    read -p "$LANG_PROMPT_CHOOSE (1-2): " translation_type
 
                     if [[ "$translation_type" == "b" ]]; then
                         break
@@ -718,7 +756,7 @@ while true; do
                                 for lang_code in "${!COMMUNITY_LANG_DISPLAY[@]}"; do
                                     key_dep="${appid}:${depot},${lang_code}"
                                     key_app="${appid},${lang_code}"
-                                    if [[ -n "${COMMUNITY_URLS[$key_dep]}" || -n "${COMMUNITY_URLS[$key_app]}" ]]; then
+                                    if [[ -n "${COMMUNITY_URLS[$key_dep]:-}" || -n "${COMMUNITY_URLS[$key_app]:-}" ]]; then
                                         # add if not already present
                                         if ! printf '%s\n' "${community_available_langs[@]}" | grep -qx "$lang_code"; then
                                             community_available_langs+=("$lang_code")
