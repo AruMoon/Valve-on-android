@@ -478,7 +478,7 @@ while true; do
             "-branch steam_legacy -app 220 -depot 389 -dir srceng" # EP1
             "-branch steam_legacy -app 220 -depot 380 -dir srceng" # EP1 maps
             "-branch steam_legacy -app 220 -depot 420 -dir srceng" # EP2
-            "-branch steam_legacy -app 320 -depot 321 -dir srceng" # HL2:DM
+            "-app 320 -depot 321 -dir srceng" # HL2:DM
             "-app 280 -depot 280 -dir srceng" # HL:S
             "-branch previous_build -app 240 -depot 241 -dir srceng" # CSS
             "-branch previous_build -app 300 -depot 301 -dir srceng" # DoD:S
